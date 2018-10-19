@@ -1,0 +1,62 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Oct 19 22:59:38 2018
+
+@author: рс
+"""
+import binascii
+import subprocess
+import chardet
+
+# task 1
+# https://www.branah.com/unicode-converter
+print('Task1')
+my_str = ['разработка', 'декоратр', 'сокет']
+my_byte = [b'\xd1\x80\xd0\xb0\xd0\xb7\xd1\x80\xd0\xb0\xd0\xb1\xd0\xbe\xd1\x82\xd0\xba\xd0\xb0',
+           b'\xd0\xb4\xd0\xb5\xd0\xba\xd0\xbe\xd1\x80\xd0\xb0\xd1\x82\xd1\x80',
+           b'\xd1\x81\xd0\xbe\xd0\xba\xd0\xb5\xd1\x82']
+for i in range(3):
+    print('str_type=', my_str[i], 'str_from_byte=', my_byte[i].decode(encoding='utf-8'))
+
+
+# task 2
+print('\nTask2')
+str_in_b =[ b'class', b'function', b'method']
+for i in range(3):
+    print('type=',type(str_in_b[i]),'len=',len(str_in_b[i]), 'content=', binascii.hexlify(str_in_b[i]))
+
+# task 3
+print('\nTask3\nНевозможно записать в байтовом типе слова:')
+my_str = ['attribute', 'класс', 'функция', 'type']
+for c in my_str:
+    try:
+        type(bytes(c,'ascii'))
+    except:
+        print(c)
+
+# task 4
+print('\nTask4')
+my_str =['разработка', 'администрирование', 'protocol', 'standard']
+for c in my_str:
+    cb = c.encode()
+    cs = cb.decode()
+    print('in_byte=', cb, 'in_str=', cs)
+
+# task 5
+print('\nTask5')
+args = ['ping', 'yandex.ru']
+subproc_ping = subprocess.Popen(args, stdout=subprocess.PIPE)
+for line in subproc_ping.stdout:
+    print('Output:', line.decode('cp866'))
+
+# task 6
+print('\nTask6')
+text = ['сетевое программирование', 'сокет', 'декоратор']
+file = open('test_file.txt','w')
+for c in text:
+    file.write(c+'\n')
+file.close()
+f = open('test_file.txt','rb')
+content = f.read()
+f.close()
+print(chardet.detect(content))
