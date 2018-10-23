@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Oct 23 12:31:29 2018
+
+@author: pc
+"""
+import glob
+import chardet
+import re
+import csv
+import json
+import yaml
+
+# task 1
+def get_data(files):
+    os_prod_list = []
+    os_name_list = []
+    os_code_list = []
+    os_type_list = []
+    for f in files:
+        textb = open(f, 'rb').read()
+        text = textb.decode(encoding=chardet.detect(textb)['encoding'])
+        os_prod_list.append(re.findall('Изготовитель системы:\s*(\w*)', text)[0])
+        os_name_list.append(re.findall('Название ОС:\s*(\w*)', text)[0])
+        os_code_list.append(re.findall('Код продукта:\s*(\w*)', text)[0])
+        os_type_list.append(re.findall('Тип системы:\s*(\w*)', text)[0])
+    main_data = [['Изготовитель системы', 'Название ОС', 'Код продукта', 'Тип системы'],
+                 os_prod_list, os_name_list, os_code_list, os_type_list]
+    return main_data
+
+
+def write_to_scv(scv_file):
+    files = glob.glob('./info*.txt')
+    data = get_data(files)
+    f_n_writer = csv.writer(scv_file)
+    for row in data:
+        f_n_writer.writerow(row)
+    return 0
+
+
+write_to_scv(open('main_data.csv', 'w'))
+
+
+# task 2
+json_dict = {}
+def write_order_to_json(item, quantity, price, buyer, date):
+    dict_j = {'item':item, 'quantity':quantity, 'price':price, 'buyer':buyer, 'date':date}
+    with open('orders.json', 'w') as fn:
+        fn.write(json.dumps(dict_j))
+    return 0
+write_order_to_json(1, 10, 12, 21, '12.10.2018')
+
+# task 3
+dict_y = {'v1':[1,'a',2], 'v2':5, 'v3':{'k1':u'8364'}}
+with open('file.yaml', 'w') as fn:
+    yaml.dump(dict_y, fn, default_flow_style=True, allow_unicode=True)
+
+with open('file.yaml', 'r') as fn:
+    fn_content = yaml.load(fn)
+print(fn_content)
