@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Oct 26 11:14:41 2018
+
+@author: pc
+"""
+
+import socket
+import json
+import time
+
+
+def make_presence_msg(account_name, status):
+    presence_msg = {
+            "action": "presence",
+            "time": time.ctime(time.time()),
+            "type": "status",
+            "user": {
+                    "account_name": account_name,
+                    "status": status
+                    }
+            }
+    return presence_msg
+
+
+def send_msg(socket_cl, data):
+    msg = json.dumps(data, ensure_ascii=False).encode("utf-8")
+    socket_cl.send(msg)
+    return 0
+
+
+def receive_msg(socket_cl):
+    msg = socket_cl.recv(2048)
+    data = json.loads(msg.decode("utf-8"))
+    return data
+
+
+socket_cl = socket.socket()
+socket_cl.connect(('localhost', 8007))
+presence_msg = make_presence_msg("romanbestaev", "Hello, everyone!")
+send_msg(socket_cl, presence_msg)
+data = receive_msg(socket_cl)
+socket_cl.close()
