@@ -1,0 +1,20 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Oct 30 14:39:30 2018
+
+@author: pc
+"""
+
+import unittest
+from client_ import  *
+
+
+class test_make_presence_msg(unittest.TestCase):
+    def test_equal(self):
+        resp1 = make_presence_msg("romanbestaev", "Hello, everyone!")
+        self.assertEqual(resp1["action"], "presence")
+
+
+if __name__ == '__main__':
+    unittest.main()
