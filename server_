@@ -9,6 +9,15 @@ Created on Fri Oct 26 10:58:44 2018
 import socket
 import json
 import time
+import sys
+import argparse
+
+
+def createParser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-a', '--addr', default='127.0.1.1')
+    parser.add_argument('-p', '--port', default=8007)
+    return parser
 
 
 def receive_msg(client):
@@ -45,12 +54,22 @@ def send_msg(client, data):
     return 0
 
 
-socket_sv = socket.socket()
-socket_sv.bind(('localhost', 8007))
-socket_sv.listen(5)
+if __name__ == '__main__':
+    parser = createParser()
+    namespace = parser.parse_args(sys.argv[1:])
+    print('arg1(addr) = ', namespace.addr)
+    print('arg2(port) = ', namespace.port)
+    socket_sv = socket.socket()
+    socket_sv.bind(('localhost', int(namespace.port)))
+    socket_sv.listen(5)
+    client, addr = socket_sv.accept()
+    data = receive_msg(client)
+    response = make_response_msg(data)
+    send_msg(client, response)
+    socket_sv.close()
 
-client, addr = socket_sv.accept()
-data = receive_msg(client)
-response = make_response_msg(data)
-send_msg(client, response)
-socket_sv.close()
+# Черновик
+#ip_ = socket.gethostbyname(socket.gethostname())
+#print('get ip from socket:', ip_, type(ip_))
+#lsof -i :8007
+#sudo kill -9 -<PID>
