@@ -9,6 +9,7 @@ Created on Fri Oct 26 11:14:41 2018
 import socket
 import json
 import time
+import sys
 
 
 def make_presence_msg(account_name, status):
@@ -36,9 +37,18 @@ def receive_msg(socket_cl):
     return data
 
 
-socket_cl = socket.socket()
-socket_cl.connect(('localhost', 8007))
-presence_msg = make_presence_msg("romanbestaev", "Hello, everyone!")
-send_msg(socket_cl, presence_msg)
-data = receive_msg(socket_cl)
-socket_cl.close()
+if __name__ == '__main__':
+    port, addr = 8007, '127.0.1.1'
+    if len(sys.argv[1:]) == 1:
+        addr = sys.argv[1]
+    elif len(sys.argv[1:]) == 2:
+        addr = sys.argv[1]
+        port = sys.argv[2]
+    elif len(sys.argv[1:]) > 2:
+        print('tow many inputs')
+    socket_cl = socket.socket()
+    socket_cl.connect(('localhost', port))
+    presence_msg = make_presence_msg("romanbestaev", "Hello, everyone!")
+    send_msg(socket_cl, presence_msg)
+    data = receive_msg(socket_cl)
+    socket_cl.close()
