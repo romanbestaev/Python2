@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Oct 30 14:39:30 2018
+
+@author: pc
+"""
+
+import unittest
+from server_ import  *
+
+
+class test_createParser(unittest.TestCase):
+    def test_type(self):
+        self.assertEqual(type(createParser()),argparse.ArgumentParser)
+
+    def test_defoult(self):
+        ns = createParser().parse_args(sys.argv[1:])
+        self.assertEqual(ns.addr, '127.0.1.1')
+        self.assertEqual(ns.port, 8007)
+
+
+class test_make_response_msg(unittest.TestCase):
+    def test_equal(self):
+        resp1 = make_response_msg({ "action": "presence","type": "status"})
+        self.assertEqual(resp1["action"], "probe")
+        resp2 = make_response_msg({ "action": "msg","type": "status"})
+        self.assertEqual(resp2["action"], "msg")
+
+
+if __name__ == '__main__':
+    unittest.main()
